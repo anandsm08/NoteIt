@@ -7,6 +7,7 @@ import com.example.noteit.feature.data.repository.NoteRepositoryImplementation
 import com.example.noteit.feature.domain.repository.NoteRepository
 import com.example.noteit.feature.domain.use_case.AddNote
 import com.example.noteit.feature.domain.use_case.DeleteNoteUseCase
+import com.example.noteit.feature.domain.use_case.GetNote
 import com.example.noteit.feature.domain.use_case.GetNotesUseCase
 import com.example.noteit.feature.domain.use_case.NoteUseCases
 import dagger.Module
@@ -40,7 +41,8 @@ object AppModule {
         return NoteUseCases(
             getNotes = GetNotesUseCase(repository),
             deleteNotes = DeleteNoteUseCase(repository),
-            addNote = AddNote(repository)
+            addNote = AddNote(repository),
+            getNote = GetNote(repository)
         )
     }
 }

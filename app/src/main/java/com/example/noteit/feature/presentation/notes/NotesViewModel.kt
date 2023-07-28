@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.noteit.feature.domain.model.Note
 import com.example.noteit.feature.domain.use_case.NoteUseCases
 import com.example.noteit.feature.domain.util.OrderNoteType
+import com.example.noteit.feature.domain.util.OrderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -26,11 +27,15 @@ class  NotesViewModel @Inject constructor(
     private var recentlyDeletedNote: Note? =null
 
     private var getNotesJob : Job?=null
+    init {
+        getNotes(OrderNoteType.Date(OrderType.descending))
+    }
+
     fun onEvent(event: NotesEvent){
         when(event){
             is NotesEvent.Order -> {
                 if(state.value.noteOrder::class == event.noteOrder::class &&
-                    state.value.noteOrder.orderType == event.noteOrder.){
+                    state.value.noteOrder.orderType == event.noteOrder.orderType){
                         return
                 }
                 getNotes(event.noteOrder)
@@ -59,6 +64,7 @@ class  NotesViewModel @Inject constructor(
     }
 
     private fun getNotes(noteOrder: OrderNoteType){
+        getNotesJob?.cancel()
         noteUseCases.getNotes(noteOrder)
             .onEach { notes ->
                 _state.value=state.value.copy(
